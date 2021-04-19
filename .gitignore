@@ -1,0 +1,12 @@
+# Tmp coverage file
+cover.*
+
+# Config files
+config.yaml
+docker-compose.yml
+
+# Binaries
+app
+
+# Local data
+data

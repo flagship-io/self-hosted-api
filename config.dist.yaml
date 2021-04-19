@@ -1,0 +1,10 @@
+env_id: "env_id" # Your Flagship Environment ID
+
+# Cache
+cache:
+    type: local # or 'redis' or 'none' (if you do not want to using visitor cache)
+    options:
+        dbPath: ./data
+        #redisHost: 'localhost:6379' # for redis storage
+        #redisUsername: username     # (Optional) for redis storage
+        #redisPassword: password     # (Optional) for redis storage

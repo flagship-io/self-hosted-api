@@ -1,0 +1,381 @@
+basePath: /
+definitions:
+  handlers.CampaignsResponse:
+    properties:
+      campaigns:
+        items:
+          $ref: '#/definitions/model.Campaign'
+        type: array
+      panic:
+        type: boolean
+      visitor_id:
+        type: string
+    type: object
+  handlers.FlagInfos:
+    properties:
+      metadata:
+        $ref: '#/definitions/handlers.FlagMetadata'
+      value:
+        type: object
+    type: object
+  handlers.FlagMetadata:
+    properties:
+      campaignId:
+        type: string
+      variationGroupID:
+        type: string
+      variationID:
+        type: string
+    type: object
+  handlers.activateBody:
+    properties:
+      caid:
+        type: string
+      cid:
+        type: string
+      vaid:
+        type: string
+      vid:
+        type: string
+    required:
+    - caid
+    - cid
+    - vaid
+    - vid
+    type: object
+  handlers.campaignsBody:
+    properties:
+      context:
+        additionalProperties: true
+        type: object
+      trigger_hit:
+        type: boolean
+      visitor_id:
+        type: string
+    required:
+    - context
+    - visitor_id
+    type: object
+  handlers.flagActivateBody:
+    properties:
+      visitorId:
+        type: string
+    required:
+    - visitorId
+    type: object
+  handlers.flagActivated:
+    properties:
+      status:
+        type: string
+    required:
+    - status
+    type: object
+  handlers.flagsBody:
+    properties:
+      activate:
+        type: boolean
+      context:
+        additionalProperties: true
+        type: object
+      visitorId:
+        type: string
+    required:
+    - context
+    - visitorId
+    type: object
+  httputils.HTTPError:
+    properties:
+      error:
+        type: string
+    type: object
+  httputils.hit:
+    properties:
+      cid:
+        type: string
+      t:
+        type: string
+      vid:
+        type: string
+    type: object
+  model.Campaign:
+    properties:
+      id:
+        type: string
+      variation:
+        $ref: '#/definitions/model.ClientVariation'
+      variationGroupId:
+        type: string
+    type: object
+  model.ClientVariation:
+    properties:
+      id:
+        type: string
+      modifications:
+        $ref: '#/definitions/model.Modification'
+      reference:
+        type: boolean
+    type: object
+  model.Modification:
+    properties:
+      type:
+        type: string
+      value:
+        additionalProperties: true
+        type: object
+    type: object
+info:
+  contact:
+    email: support@flagship.io
+    name: API Support
+    url: https://www.abtasty.com/solutions-product-teams/
+  description: This is the Flagship Decision Host API documentation
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Flagship Decision Host
+  version: "1.0"
+paths:
+  /v2/activate:
+    post:
+      consumes:
+      - application/json
+      description: Activate a campaign for a visitor ID
+      operationId: activate
+      parameters:
+      - description: Campaign activation request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.activateBody'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Activate a campaign
+      tags:
+      - v2
+  /v2/campaigns:
+    post:
+      consumes:
+      - application/json
+      description: Get all campaigns value and metadata for a visitor ID and context
+      operationId: get-campaigns
+      parameters:
+      - description: Campaigns request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.campaignsBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.CampaignsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Get all campaigns for the visitor
+      tags:
+      - v2
+  /v2/campaigns/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Get a single campaign value and metadata for a visitor ID and context
+      operationId: get-campaign
+      parameters:
+      - description: Campaign ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Campaign request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.campaignsBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Campaign'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Get a single campaigns for the visitor
+      tags:
+      - v2
+  /v2/flags:
+    post:
+      consumes:
+      - application/json
+      description: Get all flags value and metadata for a visitor ID and context
+      operationId: get-flags
+      parameters:
+      - description: Flag request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.flagsBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/handlers.FlagInfos'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Get all flags
+      tags:
+      - v2
+  /v2/flags/{key}:
+    post:
+      consumes:
+      - application/json
+      description: Get a single flag value and metadata for a visitor ID and context
+      operationId: get-flag
+      parameters:
+      - description: Flag request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.flagsBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.FlagInfos'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Get flag by name
+      tags:
+      - v2
+  /v2/flags/{key}/activate:
+    post:
+      consumes:
+      - application/json
+      description: Activate a flag by its key for a visitor ID
+      operationId: activate-flag
+      parameters:
+      - description: Flag activation request body
+        in: body
+        name: flagActivation
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.flagActivateBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.flagActivated'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Activate a flag key
+      tags:
+      - v2
+  /v2/flags/{key}/value:
+    post:
+      consumes:
+      - application/json
+      description: Get a single flag value for a visitor ID and context
+      operationId: get-flag-value
+      parameters:
+      - description: Flag request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.flagsBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httputils.HTTPError'
+      summary: Get flag value by name
+      tags:
+      - v2
+  /v2/hits:
+    post:
+      consumes:
+      - application/json
+      description: Send a hit to Flagship datacollect
+      operationId: send-hit
+      parameters:
+      - description: Hit request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/httputils.hit'
+      produces:
+      - image/gif
+      responses:
+        "200":
+          description: ""
+      summary: Send a hit
+      tags:
+      - v2
+swagger: "2.0"

@@ -1,0 +1,36 @@
+######### MAIN ############
+
+### stages ###
+stages:
+  - build
+  - deploy
+
+build:
+  image: golang:1.15-buster
+  stage: build
+  before_script:
+    - mkdir -p $HOME/go/src
+    - ln -s /builds $HOME/go/src/gitlab.com
+    - cd $HOME/go/src/gitlab.com/${CI_PROJECT_PATH}
+    - export GOPATH=$HOME/go
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - bin/
+  script:
+    - go build -o bin/app
+
+docker:
+  image: docker:latest
+  stage: deploy
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+  only:
+    - master
