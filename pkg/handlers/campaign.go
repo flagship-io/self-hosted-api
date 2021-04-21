@@ -23,7 +23,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param id path string true "Campaign ID"
-// @Param request body campaignsBody true "Campaign request body"
+// @Param request body campaignsBodySwagger true "Campaign request body"
 // @Success 200 {object} model.Campaign
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError

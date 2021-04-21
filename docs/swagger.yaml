@@ -43,11 +43,19 @@ definitions:
     - vaid
     - vid
     type: object
-  handlers.campaignsBody:
+  handlers.campaignsBodyContextSwagger:
+    properties:
+      key_bool:
+        type: boolean
+      key_number:
+        type: number
+      key_string:
+        type: string
+    type: object
+  handlers.campaignsBodySwagger:
     properties:
       context:
-        additionalProperties: true
-        type: object
+        $ref: '#/definitions/handlers.campaignsBodyContextSwagger'
       trigger_hit:
         type: boolean
       visitor_id:
@@ -176,7 +184,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/handlers.campaignsBody'
+          $ref: '#/definitions/handlers.campaignsBodySwagger'
       produces:
       - application/json
       responses:
@@ -212,7 +220,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/handlers.campaignsBody'
+          $ref: '#/definitions/handlers.campaignsBodySwagger'
       produces:
       - application/json
       responses:

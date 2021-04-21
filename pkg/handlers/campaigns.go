@@ -13,6 +13,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type campaignsBodyContextSwagger struct {
+	KeyString string  `json:"key_string"`
+	KeyNumber float64 `json:"key_number"`
+	KeyBool   bool    `json:"key_bool"`
+}
+
+type campaignsBodySwagger struct {
+	VisitorID  string                      `json:"visitor_id" binding:"required"`
+	Context    campaignsBodyContextSwagger `json:"context" binding:"required"`
+	TriggerHit bool                        `json:"trigger_hit"`
+}
+
 type campaignsBody struct {
 	VisitorID  string                 `json:"visitor_id" binding:"required"`
 	Context    map[string]interface{} `json:"context" binding:"required"`
@@ -33,7 +45,7 @@ type CampaignsResponse struct {
 // @ID get-campaigns
 // @Accept  json
 // @Produce  json
-// @Param request body campaignsBody true "Campaigns request body"
+// @Param request body campaignsBodySwagger true "Campaigns request body"
 // @Success 200 {object} CampaignsResponse
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError

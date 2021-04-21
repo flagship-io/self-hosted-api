@@ -97,7 +97,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.campaignsBody"
+                            "$ref": "#/definitions/handlers.campaignsBodySwagger"
                         }
                     }
                 ],
@@ -151,7 +151,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.campaignsBody"
+                            "$ref": "#/definitions/handlers.campaignsBodySwagger"
                         }
                     }
                 ],
@@ -467,7 +467,21 @@ var doc = `{
                 }
             }
         },
-        "handlers.campaignsBody": {
+        "handlers.campaignsBodyContextSwagger": {
+            "type": "object",
+            "properties": {
+                "key_bool": {
+                    "type": "boolean"
+                },
+                "key_number": {
+                    "type": "number"
+                },
+                "key_string": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.campaignsBodySwagger": {
             "type": "object",
             "required": [
                 "context",
@@ -475,8 +489,7 @@ var doc = `{
             ],
             "properties": {
                 "context": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/definitions/handlers.campaignsBodyContextSwagger"
                 },
                 "trigger_hit": {
                     "type": "boolean"
