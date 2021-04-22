@@ -19,7 +19,8 @@ import (
 var mainLogger = logger.GetLogger("main")
 
 // @title Flagship Decision Host
-// @version 1.0
+// @version 2.0
+// @BasePath /v2
 // @description This is the Flagship Decision Host API documentation
 
 // @contact.name API Support
@@ -29,7 +30,6 @@ var mainLogger = logger.GetLogger("main")
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @BasePath /
 func main() {
 	r := gin.Default()
 
@@ -54,12 +54,13 @@ func main() {
 		mainLogger.Panicf("Error when initializing Flagship: %v", err)
 	}
 
-	r.POST("/v2/campaigns", handlers.Campaigns(fsClient))
-	r.POST("/v2/campaigns/:id", handlers.Campaign(fsClient))
+	r.GET("/v2/health", handlers.Health(fsClient))
+	r.POST("/v2/campaigns", handlers.CampaignMiddleware(fsClient), handlers.Campaigns(fsClient))
+	r.POST("/v2/campaigns/:id", handlers.CampaignMiddleware(fsClient), handlers.Campaign(fsClient))
 	r.POST("/v2/activate", handlers.Activate(fsClient))
-	r.POST("/v2/flags", handlers.Flags(fsClient))
-	r.POST("/v2/flags/:key", handlers.Flag(fsClient))
-	r.POST("/v2/flags/:key/value", handlers.FlagValue(fsClient))
+	r.POST("/v2/flags", handlers.CampaignMiddleware(fsClient), handlers.Flags(fsClient))
+	r.POST("/v2/flags/:key", handlers.CampaignMiddleware(fsClient), handlers.Flag(fsClient))
+	r.POST("/v2/flags/:key/value", handlers.CampaignMiddleware(fsClient), handlers.FlagValue(fsClient))
 	r.POST("/v2/flags/:key/activate", handlers.FlagActivate(fsClient, fsClient.GetCacheManager() != nil))
 	r.Any("/v2/hits/*proxyPath", httputils.Proxy("https://ariane.abtasty.com"))
 

@@ -19,7 +19,7 @@ type activateBody struct {
 
 // Activate returns a flag activation handler
 // @Summary Activate a campaign
-// @Tags v2
+// @Tags Campaigns
 // @Description Activate a campaign for a visitor ID
 // @ID activate
 // @Accept  json
@@ -28,7 +28,7 @@ type activateBody struct {
 // @Success 204
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /v2/activate [post]
+// @Router /activate [post]
 func Activate(fsClient *client.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
 

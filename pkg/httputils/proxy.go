@@ -15,14 +15,14 @@ type hit struct {
 }
 
 // @Summary Send a hit
-// @Tags v2
+// @Tags Hits
 // @Description Send a hit to Flagship datacollect
 // @ID send-hit
 // @Accept  json
 // @Produce  image/gif
 // @Param request body hit true "Hit request"
 // @Success 200
-// @Router /v2/hits [post]
+// @Router /hits [post]
 // Proxy proxies the context to another domain
 func Proxy(toURL string) func(c *gin.Context) {
 	return func(c *gin.Context) {

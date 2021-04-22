@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"net/http"
-	"sync"
 
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/client"
+	"github.com/flagship-io/flagship-go-sdk/v2/pkg/model"
 
 	// use for api docs
 	_ "github.com/flagship-io/self-hosted-api/pkg/httputils"
@@ -26,7 +26,7 @@ type FlagInfos struct {
 
 // Flags returns a flags handler
 // @Summary Get all flags
-// @Tags v2
+// @Tags Flags
 // @Description Get all flags value and metadata for a visitor ID and context
 // @ID get-flags
 // @Accept  json
@@ -35,50 +35,10 @@ type FlagInfos struct {
 // @Success 200 {object} map[string]FlagInfos{}
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
-// @Router /v2/flags [post]
+// @Router /flags [post]
 func Flags(fsClient *client.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
-		vObj := &campaignsBody{}
-		err := c.BindJSON(vObj)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-
-		v, err := fsClient.NewVisitor(vObj.VisitorID, vObj.Context)
-
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-
-		err = v.SynchronizeModifications()
-
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		modifications := v.GetAllModifications()
-
-		if vObj.TriggerHit {
-			var wg sync.WaitGroup
-			for k := range modifications {
-				wg.Add(1)
-				go func(k string) { // Decrement the counter when the goroutine completes.
-					defer wg.Done()
-					v.ActivateModification(k)
-				}(k)
-			}
-
-			wg.Wait()
-		}
-
+		modifications := c.MustGet("modifications").(map[string]model.FlagInfos)
 		result := map[string]FlagInfos{}
 
 		for k, m := range modifications {

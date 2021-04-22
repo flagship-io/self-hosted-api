@@ -1,4 +1,4 @@
-basePath: /
+basePath: /v2
 definitions:
   handlers.CampaignsResponse:
     properties:
@@ -128,9 +128,9 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Flagship Decision Host
-  version: "1.0"
+  version: "2.0"
 paths:
-  /v2/activate:
+  /activate:
     post:
       consumes:
       - application/json
@@ -158,8 +158,8 @@ paths:
             $ref: '#/definitions/httputils.HTTPError'
       summary: Activate a campaign
       tags:
-      - v2
-  /v2/campaigns:
+      - Campaigns
+  /campaigns:
     post:
       consumes:
       - application/json
@@ -189,8 +189,8 @@ paths:
             $ref: '#/definitions/httputils.HTTPError'
       summary: Get all campaigns for the visitor
       tags:
-      - v2
-  /v2/campaigns/{id}:
+      - Campaigns
+  /campaigns/{id}:
     post:
       consumes:
       - application/json
@@ -225,8 +225,8 @@ paths:
             $ref: '#/definitions/httputils.HTTPError'
       summary: Get a single campaigns for the visitor
       tags:
-      - v2
-  /v2/flags:
+      - Campaigns
+  /flags:
     post:
       consumes:
       - application/json
@@ -258,8 +258,8 @@ paths:
             $ref: '#/definitions/httputils.HTTPError'
       summary: Get all flags
       tags:
-      - v2
-  /v2/flags/{key}:
+      - Flags
+  /flags/{key}:
     post:
       consumes:
       - application/json
@@ -294,8 +294,8 @@ paths:
             $ref: '#/definitions/httputils.HTTPError'
       summary: Get flag by name
       tags:
-      - v2
-  /v2/flags/{key}/activate:
+      - Flags
+  /flags/{key}/activate:
     post:
       consumes:
       - application/json
@@ -330,8 +330,8 @@ paths:
             $ref: '#/definitions/httputils.HTTPError'
       summary: Activate a flag key
       tags:
-      - v2
-  /v2/flags/{key}/value:
+      - Flags
+  /flags/{key}/value:
     post:
       consumes:
       - application/json
@@ -366,8 +366,24 @@ paths:
             $ref: '#/definitions/httputils.HTTPError'
       summary: Get flag value by name
       tags:
-      - v2
-  /v2/hits:
+      - Flags
+  /health:
+    post:
+      consumes:
+      - application/json
+      description: Get current health status for the API
+      operationId: health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.FlagInfos'
+      summary: Get health status
+      tags:
+      - Health
+  /hits:
     post:
       consumes:
       - application/json
@@ -387,5 +403,5 @@ paths:
           description: ""
       summary: Send a hit
       tags:
-      - v2
+      - Hits
 swagger: "2.0"

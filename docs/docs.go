@@ -32,7 +32,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v2/activate": {
+        "/activate": {
             "post": {
                 "description": "Activate a campaign for a visitor ID",
                 "consumes": [
@@ -42,7 +42,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "Campaigns"
                 ],
                 "summary": "Activate a campaign",
                 "operationId": "activate",
@@ -76,7 +76,7 @@ var doc = `{
                 }
             }
         },
-        "/v2/campaigns": {
+        "/campaigns": {
             "post": {
                 "description": "Get all campaigns value and metadata for a visitor ID and context",
                 "consumes": [
@@ -86,7 +86,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "Campaigns"
                 ],
                 "summary": "Get all campaigns for the visitor",
                 "operationId": "get-campaigns",
@@ -123,7 +123,7 @@ var doc = `{
                 }
             }
         },
-        "/v2/campaigns/{id}": {
+        "/campaigns/{id}": {
             "post": {
                 "description": "Get a single campaign value and metadata for a visitor ID and context",
                 "consumes": [
@@ -133,7 +133,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "Campaigns"
                 ],
                 "summary": "Get a single campaigns for the visitor",
                 "operationId": "get-campaign",
@@ -177,7 +177,7 @@ var doc = `{
                 }
             }
         },
-        "/v2/flags": {
+        "/flags": {
             "post": {
                 "description": "Get all flags value and metadata for a visitor ID and context",
                 "consumes": [
@@ -187,7 +187,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "Flags"
                 ],
                 "summary": "Get all flags",
                 "operationId": "get-flags",
@@ -227,7 +227,7 @@ var doc = `{
                 }
             }
         },
-        "/v2/flags/{key}": {
+        "/flags/{key}": {
             "post": {
                 "description": "Get a single flag value and metadata for a visitor ID and context",
                 "consumes": [
@@ -237,7 +237,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "Flags"
                 ],
                 "summary": "Get flag by name",
                 "operationId": "get-flag",
@@ -281,7 +281,7 @@ var doc = `{
                 }
             }
         },
-        "/v2/flags/{key}/activate": {
+        "/flags/{key}/activate": {
             "post": {
                 "description": "Activate a flag by its key for a visitor ID",
                 "consumes": [
@@ -291,7 +291,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "Flags"
                 ],
                 "summary": "Activate a flag key",
                 "operationId": "activate-flag",
@@ -335,7 +335,7 @@ var doc = `{
                 }
             }
         },
-        "/v2/flags/{key}/value": {
+        "/flags/{key}/value": {
             "post": {
                 "description": "Get a single flag value for a visitor ID and context",
                 "consumes": [
@@ -345,7 +345,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "Flags"
                 ],
                 "summary": "Get flag value by name",
                 "operationId": "get-flag-value",
@@ -389,7 +389,31 @@ var doc = `{
                 }
             }
         },
-        "/v2/hits": {
+        "/health": {
+            "post": {
+                "description": "Get current health status for the API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Get health status",
+                "operationId": "health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.FlagInfos"
+                        }
+                    }
+                }
+            }
+        },
+        "/hits": {
             "post": {
                 "description": "Send a hit to Flagship datacollect",
                 "consumes": [
@@ -399,7 +423,7 @@ var doc = `{
                     "image/gif"
                 ],
                 "tags": [
-                    "v2"
+                    "Hits"
                 ],
                 "summary": "Send a hit",
                 "operationId": "send-hit",
@@ -618,9 +642,9 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "1.0",
+	Version:     "2.0",
 	Host:        "",
-	BasePath:    "/",
+	BasePath:    "/v2",
 	Schemes:     []string{},
 	Title:       "Flagship Decision Host",
 	Description: "This is the Flagship Decision Host API documentation",
