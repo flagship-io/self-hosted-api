@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/client"
+	"github.com/flagship-io/self-hosted-api/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -43,7 +44,10 @@ func CampaignMiddleware(fsClient *client.Client) func(*gin.Context) {
 					wg.Add(1)
 					go func(k string) { // Decrement the counter when the goroutine completes.
 						defer wg.Done()
-						v.ActivateModification(k)
+						err := v.ActivateModification(k)
+						if err != nil {
+							log.GetLogger().Warnf("error when activating modification : %v", err)
+						}
 					}(k)
 				}
 

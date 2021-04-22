@@ -11,6 +11,7 @@ type flagActivateBody struct {
 	VisitorID string `json:"visitorId" binding:"required"`
 }
 
+//nolint
 type flagActivated struct {
 	Status string `json:"status" binding:"required"`
 }

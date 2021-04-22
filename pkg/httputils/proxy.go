@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//nolint
 type hit struct {
 	EnvironmentID string `json:"cid"`
 	VisitorID     string `json:"vid"`

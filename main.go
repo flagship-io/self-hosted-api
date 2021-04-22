@@ -6,8 +6,9 @@ import (
 
 	"github.com/flagship-io/self-hosted-api/pkg/handlers"
 	"github.com/flagship-io/self-hosted-api/pkg/httputils"
-	"github.com/flagship-io/self-hosted-api/pkg/logger"
+	"github.com/flagship-io/self-hosted-api/pkg/log"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
 	swaggerFiles "github.com/swaggo/files"
@@ -15,8 +16,6 @@ import (
 
 	_ "github.com/flagship-io/self-hosted-api/docs"
 )
-
-var mainLogger = logger.GetLogger("main")
 
 // @title Flagship Decision Host
 // @version 2.0
@@ -33,12 +32,15 @@ var mainLogger = logger.GetLogger("main")
 func main() {
 	r := gin.Default()
 
+	// Init logger with default Warn level
+	log.InitLogger(logrus.WarnLevel)
+
 	viper.AddConfigPath(".")
 
 	err := viper.ReadInConfig()
 
 	if err != nil {
-		mainLogger.Warnf("Could not find config file: %v", err)
+		log.GetLogger().Warnf("Could not find config file: %v", err)
 	}
 
 	replacer := strings.NewReplacer(".", "_")
@@ -51,7 +53,7 @@ func main() {
 	fsClient, err := initFsClient()
 
 	if err != nil {
-		mainLogger.Panicf("Error when initializing Flagship: %v", err)
+		log.GetLogger().Panicf("Error when initializing Flagship: %v", err)
 	}
 
 	r.GET("/v2/health", handlers.Health(fsClient))
@@ -67,5 +69,8 @@ func main() {
 	url := ginSwagger.URL("/v2/swagger/doc.json") // The url pointing to API definition
 	r.GET("/v2/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
-	r.Run(fmt.Sprintf("0.0.0.0:%v", port))
+	err = r.Run(fmt.Sprintf("0.0.0.0:%v", port))
+	if err != nil {
+		panic(err)
+	}
 }

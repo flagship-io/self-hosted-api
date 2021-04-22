@@ -12,12 +12,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//nolint
 type campaignsBodyContextSwagger struct {
 	KeyString string  `json:"key_string"`
 	KeyNumber float64 `json:"key_number"`
 	KeyBool   bool    `json:"key_bool"`
 }
 
+//nolint
 type campaignsBodySwagger struct {
 	VisitorID  string                      `json:"visitor_id" binding:"required"`
 	Context    campaignsBodyContextSwagger `json:"context" binding:"required"`
