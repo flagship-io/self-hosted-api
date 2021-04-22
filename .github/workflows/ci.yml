@@ -29,8 +29,10 @@ jobs:
         run: bash <(curl -s https://codecov.io/bash)
   
   release:
-      -
-        name: Run GoReleaser
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
