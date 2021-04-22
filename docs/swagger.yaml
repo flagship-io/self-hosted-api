@@ -78,19 +78,6 @@ definitions:
     required:
     - status
     type: object
-  handlers.flagsBody:
-    properties:
-      activate:
-        type: boolean
-      context:
-        additionalProperties: true
-        type: object
-      visitorId:
-        type: string
-    required:
-    - context
-    - visitorId
-    type: object
   httputils.HTTPError:
     properties:
       error:
@@ -251,7 +238,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/handlers.flagsBody'
+          $ref: '#/definitions/handlers.campaignsBodySwagger'
       produces:
       - application/json
       responses:
@@ -279,12 +266,17 @@ paths:
       description: Get a single flag value and metadata for a visitor ID and context
       operationId: get-flag
       parameters:
+      - description: Flag key
+        in: path
+        name: key
+        required: true
+        type: string
       - description: Flag request body
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/handlers.flagsBody'
+          $ref: '#/definitions/handlers.campaignsBodySwagger'
       produces:
       - application/json
       responses:
@@ -310,6 +302,11 @@ paths:
       description: Activate a flag by its key for a visitor ID
       operationId: activate-flag
       parameters:
+      - description: Flag key
+        in: path
+        name: key
+        required: true
+        type: string
       - description: Flag activation request body
         in: body
         name: flagActivation
@@ -341,12 +338,17 @@ paths:
       description: Get a single flag value for a visitor ID and context
       operationId: get-flag-value
       parameters:
+      - description: Flag key
+        in: path
+        name: key
+        required: true
+        type: string
       - description: Flag request body
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/handlers.flagsBody'
+          $ref: '#/definitions/handlers.campaignsBodySwagger'
       produces:
       - application/json
       responses:

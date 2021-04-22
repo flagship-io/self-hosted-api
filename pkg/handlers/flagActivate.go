@@ -22,6 +22,7 @@ type flagActivated struct {
 // @ID activate-flag
 // @Accept  json
 // @Produce  json
+// @Param key path string true "Flag key"
 // @Param flagActivation body flagActivateBody true "Flag activation request body"
 // @Success 200 {object} flagActivated
 // @Failure 400 {object} httputils.HTTPError

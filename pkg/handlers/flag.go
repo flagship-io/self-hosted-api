@@ -19,14 +19,15 @@ import (
 // @ID get-flag
 // @Accept  json
 // @Produce  json
-// @Param request body flagsBody true "Flag request body"
+// @Param key path string true "Flag key"
+// @Param request body campaignsBodySwagger true "Flag request body"
 // @Success 200 {object} FlagInfos{}
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /v2/flags/{key} [post]
 func Flag(fsClient *client.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
-		vObj := &flagsBody{}
+		vObj := &campaignsBody{}
 		err := c.BindJSON(vObj)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -54,7 +55,7 @@ func Flag(fsClient *client.Client) func(*gin.Context) {
 		}
 		modifications := v.GetAllModifications()
 
-		if vObj.Activate {
+		if vObj.TriggerHit {
 			var wg sync.WaitGroup
 			for k := range modifications {
 				wg.Add(1)

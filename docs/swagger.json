@@ -182,7 +182,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.flagsBody"
+                            "$ref": "#/definitions/handlers.campaignsBodySwagger"
                         }
                     }
                 ],
@@ -227,12 +227,19 @@
                 "operationId": "get-flag",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Flag key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Flag request body",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.flagsBody"
+                            "$ref": "#/definitions/handlers.campaignsBodySwagger"
                         }
                     }
                 ],
@@ -273,6 +280,13 @@
                 "summary": "Activate a flag key",
                 "operationId": "activate-flag",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Flag key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Flag activation request body",
                         "name": "flagActivation",
@@ -321,12 +335,19 @@
                 "operationId": "get-flag-value",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Flag key",
+                        "name": "key",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Flag request body",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.flagsBody"
+                            "$ref": "#/definitions/handlers.campaignsBodySwagger"
                         }
                     }
                 ],
@@ -501,25 +522,6 @@
             ],
             "properties": {
                 "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "handlers.flagsBody": {
-            "type": "object",
-            "required": [
-                "context",
-                "visitorId"
-            ],
-            "properties": {
-                "activate": {
-                    "type": "boolean"
-                },
-                "context": {
-                    "type": "object",
-                    "additionalProperties": true
-                },
-                "visitorId": {
                     "type": "string"
                 }
             }

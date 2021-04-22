@@ -11,12 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type flagsBody struct {
-	VisitorID string                 `json:"visitorId" binding:"required"`
-	Context   map[string]interface{} `json:"context" binding:"required"`
-	Activate  bool                   `json:"activate"`
-}
-
 // FlagMetadata represents the metadata informations about a flag key
 type FlagMetadata struct {
 	CampaignID       string `json:"campaignId"`
@@ -37,14 +31,14 @@ type FlagInfos struct {
 // @ID get-flags
 // @Accept  json
 // @Produce  json
-// @Param request body flagsBody true "Flag request body"
+// @Param request body campaignsBodySwagger true "Flag request body"
 // @Success 200 {object} map[string]FlagInfos{}
 // @Failure 400 {object} httputils.HTTPError
 // @Failure 500 {object} httputils.HTTPError
 // @Router /v2/flags [post]
 func Flags(fsClient *client.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
-		vObj := &flagsBody{}
+		vObj := &campaignsBody{}
 		err := c.BindJSON(vObj)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -72,7 +66,7 @@ func Flags(fsClient *client.Client) func(*gin.Context) {
 		}
 		modifications := v.GetAllModifications()
 
-		if vObj.Activate {
+		if vObj.TriggerHit {
 			var wg sync.WaitGroup
 			for k := range modifications {
 				wg.Add(1)
