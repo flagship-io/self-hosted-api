@@ -27,6 +27,17 @@ jobs:
           file: ./cover.out
       - name: Update codecov
         run: bash <(curl -s https://codecov.io/bash)
+  
+  release:
+      -
+        name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          version: latest
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   push_to_registry:
     name: Push Docker image to Docker Hub
@@ -34,7 +45,9 @@ jobs:
     steps:
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: |
+          b = "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo [[ $b = 'main' ]] && 'latest' || $b
         id: extract_branch
       - name: Check out the repo
         uses: actions/checkout@v2
