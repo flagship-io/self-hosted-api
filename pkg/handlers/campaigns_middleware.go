@@ -1,10 +1,8 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/client"
 	"github.com/gin-gonic/gin"
@@ -38,7 +36,6 @@ func CampaignMiddleware(fsClient *client.Client) func(*gin.Context) {
 		}
 		modifications := v.GetAllModifications()
 
-		start = time.Now()
 		if vObj.TriggerHit {
 			go func() {
 				var wg sync.WaitGroup
@@ -53,8 +50,6 @@ func CampaignMiddleware(fsClient *client.Client) func(*gin.Context) {
 				wg.Wait()
 			}()
 		}
-		elapsed = time.Since(start)
-		log.Printf("Activate took %s", elapsed)
 
 		c.Set("modifications", modifications)
 		c.Set("visitor", v)
