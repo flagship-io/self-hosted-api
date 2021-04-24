@@ -390,7 +390,7 @@ var doc = `{
             }
         },
         "/health": {
-            "post": {
+            "get": {
                 "description": "Get current health status for the API",
                 "consumes": [
                     "application/json"

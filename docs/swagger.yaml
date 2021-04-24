@@ -368,7 +368,7 @@ paths:
       tags:
       - Flags
   /health:
-    post:
+    get:
       consumes:
       - application/json
       description: Get current health status for the API

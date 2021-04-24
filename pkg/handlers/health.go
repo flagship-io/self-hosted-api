@@ -18,7 +18,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} FlagInfos{}
-// @Router /health [post]
+// @Router /health [get]
 func Health(fsClient *client.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
