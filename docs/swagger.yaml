@@ -78,6 +78,11 @@ definitions:
     required:
     - status
     type: object
+  handlers.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
   httputils.HTTPError:
     properties:
       error:
@@ -379,7 +384,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handlers.FlagInfos'
+            $ref: '#/definitions/handlers.statusResponse'
       summary: Get health status
       tags:
       - Health

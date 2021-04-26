@@ -10,6 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type statusResponse struct {
+	Status string `json:"status"`
+}
+
 // Health return a health handler
 // @Summary Get health status
 // @Tags Health
@@ -17,12 +21,12 @@ import (
 // @ID health
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} FlagInfos{}
+// @Success 200 {object} statusResponse{}
 // @Router /health [get]
 func Health(fsClient *client.Client) func(*gin.Context) {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"status": fsClient.GetStatus(),
+		c.JSON(http.StatusOK, statusResponse{
+			Status: fsClient.GetStatus(),
 		})
 	}
 }

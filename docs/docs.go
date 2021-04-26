@@ -407,7 +407,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/handlers.FlagInfos"
+                            "$ref": "#/definitions/handlers.statusResponse"
                         }
                     }
                 }
@@ -560,6 +560,14 @@ var doc = `{
             "required": [
                 "status"
             ],
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.statusResponse": {
+            "type": "object",
             "properties": {
                 "status": {
                     "type": "string"
