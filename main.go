@@ -4,15 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/flagship-io/self-hosted-api/pkg/handlers"
-	"github.com/flagship-io/self-hosted-api/pkg/httputils"
+	"github.com/flagship-io/self-hosted-api/pkg/fsclient"
 	"github.com/flagship-io/self-hosted-api/pkg/log"
-	"github.com/gin-gonic/gin"
+	"github.com/flagship-io/self-hosted-api/pkg/router"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 
 	_ "github.com/flagship-io/self-hosted-api/docs"
 )
@@ -30,7 +26,6 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 func main() {
-	r := gin.Default()
 
 	// Init logger with default Warn level
 	log.InitLogger(logrus.WarnLevel)
@@ -50,24 +45,13 @@ func main() {
 	viper.SetDefault("port", 8080)
 	port := viper.GetInt("port")
 
-	fsClient, err := initFsClient()
+	fsClient, err := fsclient.InitFsClient()
 
 	if err != nil {
 		log.GetLogger().Panicf("Error when initializing Flagship: %v", err)
 	}
 
-	r.GET("/v2/health", handlers.Health(fsClient))
-	r.POST("/v2/campaigns", handlers.CampaignMiddleware(fsClient), handlers.Campaigns(fsClient))
-	r.POST("/v2/campaigns/:id", handlers.CampaignMiddleware(fsClient), handlers.Campaign(fsClient))
-	r.POST("/v2/activate", handlers.Activate(fsClient))
-	r.POST("/v2/flags", handlers.CampaignMiddleware(fsClient), handlers.Flags(fsClient))
-	r.POST("/v2/flags/:key", handlers.CampaignMiddleware(fsClient), handlers.Flag(fsClient))
-	r.POST("/v2/flags/:key/value", handlers.CampaignMiddleware(fsClient), handlers.FlagValue(fsClient))
-	r.POST("/v2/flags/:key/activate", handlers.FlagActivate(fsClient, fsClient.GetCacheManager() != nil))
-	r.Any("/v2/hits/*proxyPath", httputils.Proxy("https://ariane.abtasty.com"))
-
-	url := ginSwagger.URL("/v2/swagger/doc.json") // The url pointing to API definition
-	r.GET("/v2/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+	r := router.Init(fsClient)
 
 	err = r.Run(fmt.Sprintf("0.0.0.0:%v", port))
 	if err != nil {

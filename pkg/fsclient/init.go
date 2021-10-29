@@ -1,4 +1,4 @@
-package main
+package fsclient
 
 import (
 	"time"
@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func initFsClient() (*client.Client, error) {
+func InitFsClient() (*client.Client, error) {
 
 	envID := viper.GetString("env_id")
 	apiKey := viper.GetString("api_key")

@@ -1,4 +1,4 @@
-package main
+package fsclient
 
 import (
 	"os"
@@ -14,21 +14,21 @@ func TestInitFsClient(t *testing.T) {
 	viper.SetEnvKeyReplacer(replacer)
 	viper.AutomaticEnv()
 
-	fsClient, err := initFsClient()
+	fsClient, err := InitFsClient()
 
 	assert.NotNil(t, err)
 	assert.Nil(t, fsClient)
 	assert.Contains(t, err.Error(), "APIKey is required")
 
 	os.Setenv("API_KEY", "test_api_key")
-	fsClient, err = initFsClient()
+	fsClient, err = InitFsClient()
 
 	assert.NotNil(t, err)
 	assert.Nil(t, fsClient)
 	assert.Contains(t, err.Error(), "EnvID is required")
 
 	os.Setenv("ENV_ID", "test_env_id")
-	fsClient, err = initFsClient()
+	fsClient, err = InitFsClient()
 
 	assert.NotNil(t, fsClient)
 	assert.NotNil(t, err)
