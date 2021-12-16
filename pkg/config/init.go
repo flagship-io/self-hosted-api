@@ -5,50 +5,18 @@ import (
 
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/cache"
 	"github.com/flagship-io/self-hosted-api/pkg/log"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
-// OptionBuilder is a func type to set options to the FlagshipOption.
-type OptionBuilder func(*CustomOptions)
-
-// BuildOptions fill out the FlagshipOption struct from option builders
-func (f *CustomOptions) BuildOptions(clientOptions ...OptionBuilder) {
-	// extract options
-	for _, opt := range clientOptions {
-		opt(f)
-	}
-}
-
-// WithBucketing enables the bucketing decision mode for the SDK
-func WithCustomCache(customCacheOptions cache.CustomOptions) OptionBuilder {
-	return func(f *CustomOptions) {
-		f.CustomCacheOptions = customCacheOptions
-	}
-}
-
 type Options struct {
-	Port          int
-	ClientOptions ClientOptions
-}
-
-type CacheOptions struct {
-	CacheType     string
-	LocalPath     string
-	RedisHost     string
-	RedisUsername string
-	RedisPassword string
-	RedisDb       int
-}
-
-type ClientOptions struct {
-	EnvID           string
-	APIKey          string
-	PollingInterval int
-	CacheOptions    CacheOptions
-}
-
-type CustomOptions struct {
-	CustomCacheOptions cache.CustomOptions
+	Port                int
+	EnvID               string
+	APIKey              string
+	PollingInterval     int
+	LogLevel            logrus.Level
+	GinMode             string
+	CacheOptionsBuilder func(options *cache.Options)
 }
 
 func GetOptionsFromConfig() Options {
@@ -65,11 +33,16 @@ func GetOptionsFromConfig() Options {
 	viper.AutomaticEnv()
 
 	viper.SetDefault("port", 8080)
+	viper.SetDefault("gin_mode", "debug")
+	viper.SetDefault("log_level", "warn")
+
 	port := viper.GetInt("port")
 
 	envID := viper.GetString("env_id")
 	apiKey := viper.GetString("api_key")
 	pollingInterval := viper.GetInt("polling_interval")
+	logLevel := viper.GetString("log_level")
+	ginMode := viper.GetString("gin_mode")
 	cacheType := viper.GetString("cache.type")
 	cacheLocalPath := viper.GetString("cache.options.dbPath")
 	cacheRedisHost := viper.GetString("cache.options.redisHost")
@@ -77,20 +50,34 @@ func GetOptionsFromConfig() Options {
 	cacheRedisPassword := viper.GetString("cache.options.redisPassword")
 	cacheRedisDb := viper.GetInt("cache.options.redisDb")
 
+	logLevelLogrus, err := logrus.ParseLevel(logLevel)
+	if err != nil {
+		log.GetLogger().Warnf("Could not parse log level: %v, %v", logLevel, err)
+		logLevelLogrus = logrus.WarnLevel
+	}
+
+	var cacheOptionsFunc cache.OptionBuilder
+	switch cacheType {
+	case "local":
+		cacheOptionsFunc = cache.WithLocalOptions(cache.LocalOptions{
+			DbPath: cacheLocalPath,
+		})
+	case "redis":
+		cacheOptionsFunc = cache.WithRedisOptions(cache.RedisOptions{
+			Host:     cacheRedisHost,
+			Username: cacheRedisUsername,
+			Password: cacheRedisPassword,
+			Db:       cacheRedisDb,
+		})
+	}
+
 	return Options{
-		Port: port,
-		ClientOptions: ClientOptions{
-			EnvID:           envID,
-			APIKey:          apiKey,
-			PollingInterval: pollingInterval,
-			CacheOptions: CacheOptions{
-				CacheType:     cacheType,
-				LocalPath:     cacheLocalPath,
-				RedisHost:     cacheRedisHost,
-				RedisUsername: cacheRedisUsername,
-				RedisPassword: cacheRedisPassword,
-				RedisDb:       cacheRedisDb,
-			},
-		},
+		Port:                port,
+		EnvID:               envID,
+		APIKey:              apiKey,
+		LogLevel:            logLevelLogrus,
+		GinMode:             ginMode,
+		PollingInterval:     pollingInterval,
+		CacheOptionsBuilder: cacheOptionsFunc,
 	}
 }

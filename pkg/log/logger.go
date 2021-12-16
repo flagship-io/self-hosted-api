@@ -4,11 +4,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var logger *logrus.Logger
+var logger *logrus.Logger = logrus.New()
 
 // InitLogger creates the logger with level
 func InitLogger(level logrus.Level) {
-	logger = logrus.New()
 	logger.SetLevel(level)
 }
 

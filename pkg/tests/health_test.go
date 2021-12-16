@@ -17,7 +17,7 @@ func TestActivateRoute(t *testing.T) {
 	viper.SetDefault("api_key", "fake-key")
 
 	options := config.GetOptionsFromConfig()
-	fsClient, err := fsclient.InitFsClient(options.ClientOptions, nil)
+	fsClient, err := fsclient.InitFsClient(options)
 	assert.NotNil(t, fsClient)
 	assert.Nil(t, err)
 
