@@ -1,32 +1,23 @@
 package fsclient
 
 import (
+	"errors"
 	"time"
 
 	"github.com/flagship-io/flagship-go-sdk/v2"
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/bucketing"
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/cache"
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/client"
+	"github.com/flagship-io/self-hosted-api/pkg/config"
 	"github.com/flagship-io/self-hosted-api/pkg/log"
-	"github.com/spf13/viper"
 )
 
-func InitFsClient() (*client.Client, error) {
-
-	envID := viper.GetString("env_id")
-	apiKey := viper.GetString("api_key")
-	pollingInterval := viper.GetInt("polling_interval")
-	cacheType := viper.GetString("cache.type")
-	cacheLocalPath := viper.GetString("cache.options.dbPath")
-	cacheRedisHost := viper.GetString("cache.options.redisHost")
-	cacheRedisUsername := viper.GetString("cache.options.redisUsername")
-	cacheRedisPassword := viper.GetString("cache.options.redisPassword")
-	cacheRedisDb := viper.GetInt("cache.options.redisDb")
+func InitFsClient(clientOptions config.ClientOptions, options *config.CustomOptions) (*client.Client, error) {
 
 	bucketingOptions := []func(r *bucketing.Engine){}
 
-	if pollingInterval > 0 {
-		bucketingOptions = append(bucketingOptions, bucketing.PollingInterval(time.Duration(pollingInterval)*time.Second))
+	if clientOptions.PollingInterval > 0 {
+		bucketingOptions = append(bucketingOptions, bucketing.PollingInterval(time.Duration(clientOptions.PollingInterval)*time.Second))
 	}
 
 	optionsFunc := []client.OptionBuilder{
@@ -35,28 +26,33 @@ func InitFsClient() (*client.Client, error) {
 	var cacheOptionsFunc cache.OptionBuilder
 
 	hasCache := true
-	switch cacheType {
+	switch clientOptions.CacheOptions.CacheType {
 	case "local":
 		cacheOptionsFunc = cache.WithLocalOptions(cache.LocalOptions{
-			DbPath: cacheLocalPath,
+			DbPath: clientOptions.CacheOptions.LocalPath,
 		})
 	case "redis":
 		cacheOptionsFunc = cache.WithRedisOptions(cache.RedisOptions{
-			Host:     cacheRedisHost,
-			Username: cacheRedisUsername,
-			Password: cacheRedisPassword,
-			Db:       cacheRedisDb,
+			Host:     clientOptions.CacheOptions.RedisHost,
+			Username: clientOptions.CacheOptions.RedisUsername,
+			Password: clientOptions.CacheOptions.RedisPassword,
+			Db:       clientOptions.CacheOptions.RedisDb,
 		})
+	case "custom":
+		if options == nil {
+			return nil, errors.New("wrong cache option: when using custom cache, the CustomCacheOptions option is required")
+		}
+		cacheOptionsFunc = cache.WithCustomOptions(options.CustomCacheOptions)
 	default:
 		hasCache = false
 	}
 
 	if hasCache {
 		optionsFunc = append(optionsFunc, client.WithVisitorCache(cacheOptionsFunc))
-		log.GetLogger().Infof("Using cache of type %s", cacheType)
+		log.GetLogger().Infof("Using cache of type %s", clientOptions.CacheOptions.CacheType)
 	}
 
-	fsClient, err := flagship.Start(envID, apiKey, optionsFunc...)
+	fsClient, err := flagship.Start(clientOptions.EnvID, clientOptions.APIKey, optionsFunc...)
 
 	return fsClient, err
 }
