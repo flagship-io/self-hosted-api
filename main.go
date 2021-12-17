@@ -1,14 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/flagship-io/self-hosted-api/pkg/fsclient"
+	"github.com/flagship-io/self-hosted-api/pkg/config"
 	"github.com/flagship-io/self-hosted-api/pkg/log"
-	"github.com/flagship-io/self-hosted-api/pkg/router"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
+	"github.com/flagship-io/self-hosted-api/pkg/runner"
 
 	_ "github.com/flagship-io/self-hosted-api/docs"
 )
@@ -26,35 +21,8 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 func main() {
+	options := config.GetOptionsFromConfig()
+	err := runner.RunAPI(options)
 
-	// Init logger with default Warn level
-	log.InitLogger(logrus.WarnLevel)
-
-	viper.AddConfigPath(".")
-
-	err := viper.ReadInConfig()
-
-	if err != nil {
-		log.GetLogger().Warnf("Could not find config file: %v", err)
-	}
-
-	replacer := strings.NewReplacer(".", "_")
-	viper.SetEnvKeyReplacer(replacer)
-	viper.AutomaticEnv()
-
-	viper.SetDefault("port", 8080)
-	port := viper.GetInt("port")
-
-	fsClient, err := fsclient.InitFsClient()
-
-	if err != nil {
-		log.GetLogger().Panicf("Error when initializing Flagship: %v", err)
-	}
-
-	r := router.Init(fsClient)
-
-	err = r.Run(fmt.Sprintf("0.0.0.0:%v", port))
-	if err != nil {
-		panic(err)
-	}
+	log.GetLogger().Panic(err)
 }
