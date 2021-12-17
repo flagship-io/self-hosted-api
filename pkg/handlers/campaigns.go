@@ -22,14 +22,14 @@ type campaignsBodyContextSwagger struct {
 //nolint
 type campaignsBodySwagger struct {
 	VisitorID   string                      `json:"visitor_id" binding:"required"`
-	AnonymousID string                      `json:"anonymous_id" binding:"required"`
+	AnonymousID *string                     `json:"anonymous_id"`
 	Context     campaignsBodyContextSwagger `json:"context" binding:"required"`
 	TriggerHit  bool                        `json:"trigger_hit"`
 }
 
 type campaignsBody struct {
 	VisitorID   string                 `json:"visitor_id" binding:"required"`
-	AnonymousID string                 `json:"anonymous_id" binding:"required"`
+	AnonymousID *string                `json:"anonymous_id"`
 	Context     map[string]interface{} `json:"context" binding:"required"`
 	TriggerHit  bool                   `json:"trigger_hit"`
 }

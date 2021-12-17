@@ -40,7 +40,7 @@ func Proxy(toURL string) func(c *gin.Context) {
 			req.Host = remote.Host
 			req.URL.Scheme = remote.Scheme
 			req.URL.Host = remote.Host
-			req.URL.Path = c.Param("proxyPath")
+			req.URL.Path = "/"
 		}
 
 		proxy.ServeHTTP(c.Writer, c.Request)

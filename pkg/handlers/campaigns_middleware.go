@@ -20,15 +20,17 @@ func CampaignMiddleware(fsClient *client.Client) func(*gin.Context) {
 			return
 		}
 
+		hasAnonymous := vObj.AnonymousID != nil && *vObj.AnonymousID != ""
+
 		// set initial visitor ID as anonymous ID if exists
-		vID := vObj.AnonymousID
-		if vID == "" {
-			vID = vObj.VisitorID
+		vID := vObj.VisitorID
+		if hasAnonymous {
+			vID = *vObj.AnonymousID
 		}
 		v, err := fsClient.NewVisitor(vID, vObj.Context)
 
 		// If anonymous id is set, authenticate the visitor
-		if vObj.AnonymousID != "" {
+		if hasAnonymous {
 			v.Authenticate(vObj.VisitorID, nil, false)
 		}
 
