@@ -12,7 +12,7 @@ import (
 
 type activateBody struct {
 	VisitorID        string  `json:"vid" binding:"required"`
-	AnonymousID      *string `json:"vid"`
+	AnonymousID      *string `json:"aid"`
 	CampaignID       string  `json:"cid" binding:"required"`
 	VariationGroupID string  `json:"caid" binding:"required"`
 	VariationID      string  `json:"vaid" binding:"required"`
