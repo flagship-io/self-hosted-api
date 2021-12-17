@@ -31,7 +31,7 @@ func CampaignMiddleware(fsClient *client.Client) func(*gin.Context) {
 
 		// If anonymous id is set, authenticate the visitor
 		if hasAnonymous {
-			v.Authenticate(vObj.VisitorID, nil, false)
+			err = v.Authenticate(vObj.VisitorID, nil, false)
 		}
 
 		if err != nil {
