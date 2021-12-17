@@ -59,9 +59,7 @@ func GetOptionsFromConfig() Options {
 	var cacheOptionsFunc cache.OptionBuilder
 	switch cacheType {
 	case "local":
-		cacheOptionsFunc = cache.WithLocalOptions(cache.LocalOptions{
-			DbPath: cacheLocalPath,
-		})
+		cacheOptionsFunc = cache.WithLocalOptions(cache.LocalOptions{DbPath: cacheLocalPath})
 	case "redis":
 		cacheOptionsFunc = cache.WithRedisOptions(cache.RedisOptions{
 			Host:     cacheRedisHost,

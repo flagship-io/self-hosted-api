@@ -2,6 +2,8 @@ name: CI pipeline
 # This workflow is triggered on pushes to the repository.
 on:
   push:
+    branches:
+      - main
     tags:
       - v*
 
@@ -9,6 +11,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
