@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/alicebob/miniredis/v2 v2.12.0
-	github.com/flagship-io/flagship-go-sdk/v2 v2.0.11
+	github.com/flagship-io/flagship-go-sdk/v2 v2.0.13-alpha.2
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-openapi/spec v0.20.3 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect

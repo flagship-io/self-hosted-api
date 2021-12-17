@@ -11,10 +11,11 @@ import (
 )
 
 type activateBody struct {
-	VisitorID        string `json:"vid" binding:"required"`
-	CampaignID       string `json:"cid" binding:"required"`
-	VariationGroupID string `json:"caid" binding:"required"`
-	VariationID      string `json:"vaid" binding:"required"`
+	VisitorID        string  `json:"vid" binding:"required"`
+	AnonymousID      *string `json:"aid"`
+	CampaignID       string  `json:"cid" binding:"required"`
+	VariationGroupID string  `json:"caid" binding:"required"`
+	VariationID      string  `json:"vaid" binding:"required"`
 }
 
 // Activate returns a flag activation handler
@@ -41,7 +42,7 @@ func Activate(fsClient *client.Client) func(*gin.Context) {
 			return
 		}
 
-		err = fsClient.SendHit(aObj.VisitorID, &model.ActivationHit{
+		err = fsClient.SendHit(aObj.VisitorID, aObj.AnonymousID, &model.ActivationHit{
 			VisitorID:        aObj.VisitorID,
 			EnvironmentID:    fsClient.GetEnvID(),
 			VariationGroupID: aObj.VariationGroupID,

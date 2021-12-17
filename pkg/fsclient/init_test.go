@@ -29,17 +29,17 @@ func TestInitFsClient(t *testing.T) {
 
 	assert.NotNil(t, err)
 	assert.Nil(t, fsClient)
-	assert.Contains(t, err.Error(), "APIKey is required")
-
-	os.Setenv("API_KEY", "test_api_key")
-	options = config.GetOptionsFromConfig()
-	fsClient, err = InitFsClient(options)
-
-	assert.NotNil(t, err)
-	assert.Nil(t, fsClient)
 	assert.Contains(t, err.Error(), "EnvID is required")
 
 	os.Setenv("ENV_ID", "test_env_id")
+	options = config.GetOptionsFromConfig()
+	fsClient, err = InitFsClient(options)
+
+	assert.Nil(t, fsClient)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "APIKey is required")
+
+	os.Setenv("API_KEY", "test_api_key")
 	options = config.GetOptionsFromConfig()
 	fsClient, err = InitFsClient(options)
 

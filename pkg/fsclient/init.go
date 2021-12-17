@@ -6,6 +6,7 @@ import (
 	"github.com/flagship-io/flagship-go-sdk/v2"
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/bucketing"
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/client"
+	"github.com/flagship-io/flagship-go-sdk/v2/pkg/logging"
 	"github.com/flagship-io/self-hosted-api/pkg/config"
 )
 
@@ -24,6 +25,7 @@ func InitFsClient(options config.Options) (*client.Client, error) {
 		optionsFunc = append(optionsFunc, client.WithVisitorCache(options.CacheOptionsBuilder))
 	}
 
+	logging.SetLevel(options.LogLevel)
 	fsClient, err := flagship.Start(options.EnvID, options.APIKey, optionsFunc...)
 
 	return fsClient, err
