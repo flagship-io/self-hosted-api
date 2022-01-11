@@ -15,7 +15,7 @@ import (
 
 var inMemoryCache = map[string]map[string]*cache.CampaignCache{}
 
-func TestinitFsClient(t *testing.T) {
+func TestInitFsClient(t *testing.T) {
 	replacer := strings.NewReplacer(".", "_")
 	viper.SetEnvKeyReplacer(replacer)
 	viper.AutomaticEnv()
@@ -80,6 +80,7 @@ func TestinitFsClient(t *testing.T) {
 			return nil
 		},
 	})
+	options.PollingInterval = 100
 	fsClient, err = initFsClient(options)
 	assert.NotNil(t, fsClient)
 	assert.NotNil(t, err)

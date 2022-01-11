@@ -50,7 +50,7 @@ func CampaignMiddleware(fsClient *client.Client) func(*gin.Context) {
 		}
 		modifications := v.GetAllModifications()
 
-		if vObj.TriggerHit {
+		if vObj.TriggerHit == nil || *vObj.TriggerHit {
 			go func() {
 				var wg sync.WaitGroup
 				for k := range modifications {
