@@ -1,9 +1,8 @@
 package main
 
 import (
-	"github.com/flagship-io/self-hosted-api/pkg/config"
-	"github.com/flagship-io/self-hosted-api/pkg/log"
-	"github.com/flagship-io/self-hosted-api/pkg/runner"
+	"github.com/flagship-io/self-hosted-api/internal/log"
+	"github.com/flagship-io/self-hosted-api/runner"
 
 	_ "github.com/flagship-io/self-hosted-api/docs"
 )
@@ -21,7 +20,7 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 func main() {
-	options := config.GetOptionsFromConfig()
+	options := runner.GetOptionsFromConfig()
 	err := runner.RunAPI(options)
 
 	log.GetLogger().Panic(err)

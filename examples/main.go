@@ -2,14 +2,13 @@ package main
 
 import (
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/cache"
-	"github.com/flagship-io/self-hosted-api/pkg/config"
-	"github.com/flagship-io/self-hosted-api/pkg/runner"
+	"github.com/flagship-io/self-hosted-api/runner"
 )
 
 var inMemoryCache = map[string]map[string]*cache.CampaignCache{}
 
 func main() {
-	options := config.Options{
+	options := runner.Options{
 		Port:   8080,
 		EnvID:  "env_id",
 		APIKey: "api_key",
