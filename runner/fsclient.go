@@ -6,6 +6,7 @@ import (
 	"github.com/flagship-io/flagship-go-sdk/v2"
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/bucketing"
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/client"
+	"github.com/flagship-io/flagship-go-sdk/v2/pkg/decisionapi"
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/logging"
 )
 
@@ -18,6 +19,9 @@ func initFsClient(options Options) (*client.Client, error) {
 
 	optionsFunc := []client.OptionBuilder{
 		client.WithBucketing(bucketingOptions...),
+		client.WithDecisionAPI(decisionapi.AdditionalHeaders(map[string]string{
+			"x-flagship-mode": "self-hosted",
+		})),
 	}
 
 	if options.CacheOptionsBuilder != nil {
