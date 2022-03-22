@@ -1,6 +1,7 @@
 package runner
 
 import (
+	"crypto/tls"
 	"strings"
 
 	"github.com/flagship-io/flagship-go-sdk/v2/pkg/cache"
@@ -57,6 +58,7 @@ func GetOptionsFromConfig() Options {
 	cacheRedisUsername := viper.GetString("cache.options.redisUsername")
 	cacheRedisPassword := viper.GetString("cache.options.redisPassword")
 	cacheRedisDb := viper.GetInt("cache.options.redisDb")
+	cacheRedisTls := viper.GetBool("cache.options.redisTls")
 
 	logLevelLogrus, err := logrus.ParseLevel(logLevel)
 	if err != nil {
@@ -69,11 +71,16 @@ func GetOptionsFromConfig() Options {
 	case "local":
 		cacheOptionsFunc = cache.WithLocalOptions(cache.LocalOptions{DbPath: cacheLocalPath})
 	case "redis":
+		var tlsConfig *tls.Config
+		if cacheRedisTls {
+			tlsConfig = &tls.Config{}
+		}
 		cacheOptionsFunc = cache.WithRedisOptions(cache.RedisOptions{
-			Host:     cacheRedisHost,
-			Username: cacheRedisUsername,
-			Password: cacheRedisPassword,
-			Db:       cacheRedisDb,
+			Host:      cacheRedisHost,
+			Username:  cacheRedisUsername,
+			Password:  cacheRedisPassword,
+			Db:        cacheRedisDb,
+			TLSConfig: tlsConfig,
 		})
 	}
 
