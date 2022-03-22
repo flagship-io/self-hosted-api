@@ -105,7 +105,8 @@ Each parameter is named as in the config.yaml file, and the matching environment
 | cache.options.dbPath (CACHE_OPTIONS_DBPATH)               | string |       no | If you chose local cache type, this is the path of the file where the cache will be stored. Default to empty string |
 | cache.options.redisHost (CACHE_OPTIONS_REDISHOST)         | string |       no |                        If you chose redis cache type, this is the host for your redis server                        |
 | cache.options.redisUsername (CACHE_OPTIONS_REDISUSERNAME) | string |       no |                      If you chose redis cache type, this is the username for your redis server                      |
-| cache.options.redisUsername (CACHE_OPTIONS_REDISPASSWORD) | string |       no |                      If you chose redis cache type, this is the password for your redis server                      |
+| cache.options.redisPassword (CACHE_OPTIONS_REDISPASSWORD) | string |       no |                      If you chose redis cache type, this is the password for your redis server                      |
+| cache.options.redisTls (CACHE_OPTIONS_REDISTLS)           |  bool  |       no |                     If you chose redis cache type, this sets the TLS mode to call redis server                      |
 | cache.options.redisDb (CACHE_OPTIONS_REDISDB)             |  int   |       no |        If you chose redis cache type, this is the db number for your redis server. Default to 0 (default DB)        |
 
 ## Usage
