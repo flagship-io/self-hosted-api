@@ -8,6 +8,9 @@
 
 **Visit [https://developers.flagship.io/](https://developers.flagship.io/) to get started with Flagship.**
 
+## ⛔️ DEPRECATED. 
+### Please use [https://github.com/flagship-io/decision-api](https://github.com/flagship-io/decision-api) instead (Early Adopter)
+
 # Docs
 
 ## Running the app
